@@ -2,10 +2,12 @@ package core;
 
 import utils.Pair;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
 
 /**
  * A generic ParallelMapReduceEngine that uses ForkJoinPool for better parallelism.
@@ -18,7 +20,7 @@ public final class ParallelMapReduceEngine<K, V> extends MapReduceEngine<K, V> {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * Initialize another instance field for ForkJoinPool.
      *
      * @param lines   The input data lines to process
@@ -48,7 +50,13 @@ public final class ParallelMapReduceEngine<K, V> extends MapReduceEngine<K, V> {
      */
     @Override
     protected Map<K, List<V>> executeShuffle(List<Pair<K, V>> mapped) {
-        return pool.submit(() -> mapped.parallelStream().collect(Collectors.groupingByConcurrent(Pair::first, Collectors.mapping(Pair::second, Collectors.toList())))).join();
+        Map<K, List<V>> shuffled = new HashMap<>();
+
+        for (Pair<K, V> pair : mapped) {
+            shuffled.computeIfAbsent(pair.first(), _ -> new ArrayList<>()).add(pair.second());
+        }
+
+        return shuffled;
     }
 
     /**
@@ -59,6 +67,14 @@ public final class ParallelMapReduceEngine<K, V> extends MapReduceEngine<K, V> {
      */
     @Override
     protected Map<K, V> executeReduce(Map<K, List<V>> shuffled) {
-        return pool.submit(() -> shuffled.entrySet().parallelStream().collect(Collectors.toConcurrentMap(Map.Entry::getKey, e -> reducer.reduce(e.getKey(), e.getValue()).second()))).join();
+        ConcurrentHashMap<K, V> reduced = new ConcurrentHashMap<>();
+
+        pool.submit(() -> shuffled.entrySet().parallelStream().forEach(entry -> {
+            K key = entry.getKey();
+            List<V> values = entry.getValue();
+            reduced.put(key, reducer.reduce(key, values).second());
+        })).join();
+
+        return reduced;
     }
 }
