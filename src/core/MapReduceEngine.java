@@ -19,6 +19,7 @@ public class MapReduceEngine<K, V> {
     private final List<String> lines;
     private final Mapper<K, V> mapper;
     private final Reducer<K, V> reducer;
+    private final ForkJoinPool pool;
 
     /**
      * Create the instance of the class using inputs, mapper, reducer, and number of threads.
@@ -32,6 +33,7 @@ public class MapReduceEngine<K, V> {
         this.lines = lines;
         this.mapper = mapper;
         this.reducer = reducer;
+        this.pool = new ForkJoinPool();
     }
 
     /**
@@ -40,11 +42,9 @@ public class MapReduceEngine<K, V> {
      * @return A map containing the final reduced results
      */
     public Map<K, V> execute() {
-        try (ForkJoinPool pool = new ForkJoinPool()) {
-            List<Pair<K, V>> mapped = executeMap(pool);
-            Map<K, List<V>> shuffled = executeShuffle(mapped);
-            return executeReduce(pool, shuffled);
-        }
+        List<Pair<K, V>> mapped = executeMap(pool);
+        Map<K, List<V>> shuffled = executeShuffle(mapped);
+        return executeReduce(pool, shuffled);
     }
 
     /**
