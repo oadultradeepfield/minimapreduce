@@ -15,7 +15,7 @@ import java.util.concurrent.ForkJoinPool;
  * @param <K> The key type
  * @param <V> The value type
  */
-public class MapReduceEngine<K, V> {
+public final class MapReduceEngine<K, V> {
     private final List<String> lines;
     private final Mapper<K, V> mapper;
     private final Reducer<K, V> reducer;
