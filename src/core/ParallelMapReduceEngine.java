@@ -18,7 +18,7 @@ public final class ParallelMapReduceEngine<K, V> extends MapReduceEngine<K, V> {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * Initialize another instance field for ForkJoinPool.
      *
      * @param lines   The input data lines to process
