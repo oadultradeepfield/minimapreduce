@@ -1,9 +1,8 @@
 ## MiniMapReduce
 
 A lightweight, Java-based MapReduce framework designed to demonstrate the core concepts of distributed data processing.
-MiniMapReduce lets you run simple MapReduce jobs—such as word counts or data aggregations—on a single JVM using
-parallelism via the ForkJoinPool, making it an ideal learning tool and foundation for experimenting with MapReduce
-pipelines.
+MiniMapReduce lets you run simple MapReduce jobs, such as word counts or data aggregations, on a single JVM using
+parallelism via the ForkJoinPool.
 
 ## Table of Contents
 
@@ -21,7 +20,7 @@ pipelines.
 * **Pluggable Tasks**
   Easily swap in your own mapper and reducer implementations to tackle custom data-processing jobs.
 * **Lightweight & Portable**
-  No external dependencies beyond JDK 24 and JUnit 4 — runs anywhere Java runs.
+  No external dependencies beyond JDK 24 and JUnit 4, runs anywhere Java runs.
 
 ## Prerequisites
 
@@ -33,8 +32,8 @@ pipelines.
 1. **Map Phase**
 
     * Input splits are read line-by-line.
-    * Each line is submitted as a `MapTask` to the `ForkJoinPool`.
-    * The user-provided `Mapper` processes input and emits intermediate key–value pairs.
+    * Each line is submitted as a `Mapped Task` to the `ForkJoinPool`.
+    * The user-provided [`Mapper`](/src/core/Mapper.java) processes input and emits intermediate key–value pairs.
 
 2. **Shuffle & Sort**
 
@@ -43,28 +42,27 @@ pipelines.
 
 3. **Reduce Phase**
 
-    * Each partition is handled by a `ReduceTask` in parallel.
-    * The user-provided `Reducer` combines all values for a key into final results.
+    * Each partition is handled by a `Reduced Task` in parallel.
+    * The user-provided [`Reducer`](/src/core/Reducer.java) combines all values for a key into final results.
 
 4. **Output**
 
-    * Final key–value pairs are written to output files, one per reducer.
+    * Final key–value pairs are written to output, one per reducer.
 
 ```mermaid
 graph TB
-    A[Input Files] --> B[Map Phase]
-    B --> C1[Map Task 1]
-    B --> C2[Map Task 2]
-    B --> C3[Map Task 3]
-    C1 --> D[Intermediate KV]
-    C2 --> D
-    C3 --> D
-    D --> E[Shuffle & Sort]
-    E --> F[Reduce Phase]
-    F --> G1[Reduce Task 1]
-    F --> G2[Reduce Task 2]
-    G1 --> H[Output Files]
-    G2 --> H
+    A[Input Data]
+    A -- Map --> B1[Mapped Task 1]
+    A -- Map --> B2[Mapped Task 2]
+    A -- Map --> B3[Mapped Task 3]
+    B1 --> D[Intermediate KV]
+    B2 --> D
+    B3 --> D
+    D -- Shuffle & Sort --> E[Shuffled KV]
+    E -- Reduce --> F1[Reduced Task 1]
+    E -- Reduce --> F2[Reduced Task 2]
+    F1 --> G[Output Data]
+    F2 --> G
 ```
 
 ## License
