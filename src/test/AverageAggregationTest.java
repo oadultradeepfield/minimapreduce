@@ -34,8 +34,8 @@ public class AverageAggregationTest {
     List<Pair<String, Double>> result = mapper.map(line);
 
     assertEquals("Mapper should produce one pair", 1, result.size());
-    assertEquals("Mapper should extract key correctly", "A", result.get(0).first());
-    assertEquals("Mapper should extract value correctly", 10.5, result.get(0).second(), 0.001);
+    assertEquals("Mapper should extract key correctly", "A", result.getFirst().first());
+    assertEquals("Mapper should extract value correctly", 10.5, result.getFirst().second(), 0.001);
   }
 
   @Test
@@ -45,8 +45,8 @@ public class AverageAggregationTest {
     List<Pair<String, Double>> result = tabMapper.map(line);
 
     assertEquals("Mapper should produce one pair", 1, result.size());
-    assertEquals("Mapper should extract key correctly", "B", result.get(0).first());
-    assertEquals("Mapper should extract value correctly", 20.7, result.get(0).second(), 0.001);
+    assertEquals("Mapper should extract key correctly", "B", result.getFirst().first());
+    assertEquals("Mapper should extract value correctly", 20.7, result.getFirst().second(), 0.001);
   }
 
   @Test
@@ -100,9 +100,12 @@ public class AverageAggregationTest {
 
     assertEquals("Mapper should produce one pair", 1, result.size());
     assertEquals(
-        "Mapper should extract key correctly from index 2", "region1", result.get(0).first());
+        "Mapper should extract key correctly from index 2", "region1", result.getFirst().first());
     assertEquals(
-        "Mapper should extract value correctly from index 1", 42.5, result.get(0).second(), 0.001);
+        "Mapper should extract value correctly from index 1",
+        42.5,
+        result.getFirst().second(),
+        0.001);
   }
 
   @Test(expected = NumberFormatException.class)
