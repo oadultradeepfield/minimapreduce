@@ -1,4 +1,4 @@
-## MiniMapReduce
+# MiniMapReduce
 
 A lightweight, Java-based MapReduce framework designed to demonstrate the core concepts of distributed data processing.
 MiniMapReduce lets you run simple MapReduce jobs, such as word counts or data aggregations, on a single JVM using
@@ -14,7 +14,8 @@ parallelism via the ForkJoinPool.
 ## Key Features
 
 * **Core MapReduce API**
-  Provides `Mapper`, `Reducer`, and `Job` abstractions that mirror the classic MapReduce paradigm.
+  Provides [`Mapper`](/src/core/Mapper.java), [`Reducer`](/src/core/Reducer.java), and [`Job`](/src/jobs) abstractions
+  that mirror the classic MapReduce paradigm.
 * **Parallel Processing**
   Utilizes Java’s `ForkJoinPool` to process map tasks concurrently for high throughput on multi-core machines.
 * **Pluggable Tasks**
