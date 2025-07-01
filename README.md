@@ -71,7 +71,7 @@ graph TB
     E -- Reduce --> Fx[...]
     E -- Reduce --> Fn[Reduced Task n]
 
-    F1 --> G[Outpujt Data]
+    F1 --> G[Outpuj Data]
     F2 --> G
     Fx --> G
     Fn --> G
